@@ -70,3 +70,33 @@ export function getDailyXP(entry: DailyEntry): number {
     return sum + count * (action.type === 'time' ? action.xp : action.xp);
   }, 0);
 }
+
+export function summarizeEntryXP(entry: DailyEntry): {
+  positiveXP: number;
+  negativeXP: number;
+  netXP: number;
+} {
+  return Object.entries(entry.actions).reduce(
+    (totals, [actionId, count]) => {
+      const action = ACTIONS.find((item) => item.id === actionId);
+      if (!action) return totals;
+      const sanitizedCount = action.type === 'time' ? Math.max(count, 0) : count;
+      const value = sanitizedCount * action.xp;
+
+      if (value >= 0) {
+        return {
+          ...totals,
+          positiveXP: totals.positiveXP + value,
+          netXP: totals.netXP + value,
+        };
+      }
+
+      return {
+        ...totals,
+        negativeXP: totals.negativeXP + Math.abs(value),
+        netXP: totals.netXP + value,
+      };
+    },
+    { positiveXP: 0, negativeXP: 0, netXP: 0 }
+  );
+}
