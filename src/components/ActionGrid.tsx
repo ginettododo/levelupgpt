@@ -19,9 +19,7 @@ const ActionGrid: React.FC<Props> = ({ category }) => {
   const renderCard = (actionId: string, label: string, type: string) => {
     const currentValue = entry.actions[actionId] ?? 0;
     const isActive = currentValue > 0;
-    const cardClass = `neon-card aspect-[1.6/1] p-3 flex flex-col justify-between active:scale-95 transition ${
-      isActive ? 'border-neon-physical/50 shadow-neon-green' : ''
-    }`;
+    const cardClass = `tile ${isActive ? 'tile-active' : ''}`;
 
     if (type === 'boolean') {
       return (
@@ -31,9 +29,11 @@ const ActionGrid: React.FC<Props> = ({ category }) => {
           onClick={() => updateAction(actionId, isActive ? 0 : 1)}
           aria-pressed={isActive}
         >
-          <span className="text-xs uppercase tracking-widest text-white/60">Toggle</span>
-          <span className="text-left font-semibold text-white">{label}</span>
-          <span className="text-[10px] text-white/50">Tap to {isActive ? 'disable' : 'complete'}</span>
+          <div>
+            <p className="label">Toggle</p>
+            <p className="tile-title">{label}</p>
+          </div>
+          <span className="pill subtle">{isActive ? 'Completed' : 'Tap to complete'}</span>
         </button>
       );
     }
@@ -41,23 +41,23 @@ const ActionGrid: React.FC<Props> = ({ category }) => {
     if (type === 'counter') {
       return (
         <div key={actionId} className={cardClass} role="group" aria-label={label}>
-          <div className="text-left">
-            <p className="text-xs uppercase tracking-widest text-white/60">Count</p>
-            <p className="font-semibold">{label}</p>
+          <div>
+            <p className="label">Count</p>
+            <p className="tile-title">{label}</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="counter">
             <button
               type="button"
-              className="neon-pill bg-lvl-800 text-white active:scale-95"
+              className="pill ghost"
               onClick={() => updateAction(actionId, currentValue - 1)}
               aria-label={`Decrease ${label}`}
             >
               -
             </button>
-            <span className="font-bold text-lg">{currentValue}</span>
+            <span className="counter-value">{currentValue}</span>
             <button
               type="button"
-              className="neon-pill bg-lvl-800 text-white active:scale-95"
+              className="pill ghost"
               onClick={() => updateAction(actionId, currentValue + 1)}
               aria-label={`Increase ${label}`}
             >
@@ -70,11 +70,11 @@ const ActionGrid: React.FC<Props> = ({ category }) => {
 
     return (
       <div key={actionId} className={cardClass}>
-        <div className="text-left">
-          <p className="text-xs uppercase tracking-widest text-white/60">Hours</p>
-          <p className="font-semibold">{label}</p>
+        <div>
+          <p className="label">Hours</p>
+          <p className="tile-title">{label}</p>
         </div>
-        <div className="grid grid-cols-5 gap-1">
+        <div className="hour-grid">
           {[0, 1, 2, 3, 4].map((value) => {
             const labelText = value === 4 ? '4+' : value.toString();
             const selected = currentValue === value || (value === 4 && currentValue >= 4);
@@ -82,9 +82,7 @@ const ActionGrid: React.FC<Props> = ({ category }) => {
               <button
                 key={value}
                 type="button"
-                className={`neon-pill text-center ${
-                  selected ? 'bg-neon-work/20 text-neon-work' : 'bg-lvl-800 text-white/70'
-                }`}
+                className={`pill ${selected ? 'primary' : 'ghost'}`}
                 onClick={() => updateAction(actionId, value === 4 ? 4 : value)}
               >
                 {labelText}
@@ -96,11 +94,7 @@ const ActionGrid: React.FC<Props> = ({ category }) => {
     );
   };
 
-  return (
-    <div className="grid grid-cols-2 gap-3">
-      {actions.map((action) => renderCard(action.id, action.label, action.type))}
-    </div>
-  );
+  return <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">{actions.map((action) => renderCard(action.id, action.label, action.type))}</div>;
 };
 
 export default ActionGrid;
