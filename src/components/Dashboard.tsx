@@ -1,4 +1,4 @@
-import { AlertOctagon, ShieldCheck } from 'lucide-react';
+import { AlertOctagon, Sparkle, TrendingUp } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 import { useGame, useTodayEntry } from '../context/GameContext';
@@ -18,8 +18,8 @@ const Dashboard: React.FC = () => {
   const status = useMemo(() => {
     const hasNegative = Object.entries(today.actions).some(([, count]) => count < 0);
     return hasNegative
-      ? { label: 'Recovery Mode', icon: <AlertOctagon className="text-neon-negative" />, color: 'text-neon-negative' }
-      : { label: 'Clean & Focused', icon: <ShieldCheck className="text-neon-physical" />, color: 'text-neon-physical' };
+      ? { label: 'Recovery Mode', tone: 'alert', hint: 'Reset rituals & protect streaks' }
+      : { label: 'Clean & Focused', tone: 'success', hint: 'Momentum locked in' };
   }, [today.actions]);
 
   const chartData = useMemo(() => {
@@ -47,28 +47,44 @@ const Dashboard: React.FC = () => {
 
     return (
       <div className="space-y-4">
-        <div className="neon-card p-4 flex items-center justify-between">
-          <div>
-            <p className="text-[10px] uppercase tracking-widest text-white/60">Status</p>
-            <p className={`text-lg font-black ${status.color}`}>{status.label}</p>
+        <div className="panel-stack">
+          <div className={`signal ${status.tone}`}>
+            <div>
+              <p className="label">Status</p>
+              <p className="text-xl font-semibold">{status.label}</p>
+              <p className="text-sm text-white/70">{status.hint}</p>
+            </div>
+            {status.tone === 'alert' ? <AlertOctagon /> : <Sparkle />}
           </div>
-          {status.icon}
-        </div>
-        <div className="neon-card p-4">
-          <p className="text-xs uppercase tracking-widest text-white/60">Last 7 Days</p>
-          <div className="h-40 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 8, right: 8, left: 8, bottom: 4 }}>
-                <XAxis dataKey="date" stroke="#9ca3af" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{ background: '#0f0f11', border: '1px solid rgba(255,255,255,0.1)' }} />
-                <Bar dataKey="value" radius={[4, 4, 4, 4]} fill="#ffffff" />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="panel">
+            <div className="flex items-center justify-between mb-2">
+              <p className="label">Last 7 days</p>
+              <div className="status-chip soft">Velocity</div>
+            </div>
+            <div className="h-40 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 8, right: 8, left: 8, bottom: 4 }}>
+                  <XAxis dataKey="date" stroke="#9ca3af" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <Tooltip contentStyle={{ background: '#0f0f11', border: '1px solid rgba(255,255,255,0.1)' }} />
+                  <Bar dataKey="value" radius={[6, 6, 6, 6]} fill="url(#neonGradient)" />
+                  <defs>
+                    <linearGradient id="neonGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#00f0ff" stopOpacity={0.9} />
+                      <stop offset="95%" stopColor="#bd00ff" stopOpacity={0.7} />
+                    </linearGradient>
+                  </defs>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-[10px] uppercase tracking-widest text-white/60">Daily Missions</p>
+        <div className="panel">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <p className="label">Daily missions</p>
+              <p className="text-sm text-white/70">Micro-quests to lock discipline.</p>
+            </div>
+            <div className="pill ghost">Auto-tracked</div>
           </div>
           <DailyMissions />
         </div>
@@ -77,24 +93,35 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="px-4 pb-24" aria-label="Dashboard">
-      <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            className={`neon-pill whitespace-nowrap ${
-              activeTab === tab ? 'bg-neon-work/20 text-white shadow-neon-blue' : 'bg-lvl-800 text-white/70'
-            }`}
-            onClick={() => setActiveTab(tab)}
-            aria-pressed={activeTab === tab}
-          >
-            {tab}
-          </button>
-        ))}
+    <section className="space-y-5" aria-label="Dashboard">
+      <div className="card-surface">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="label">Mission control</p>
+            <p className="text-xl font-bold">Minimal actions, maximal flow</p>
+          </div>
+          <div className="pill primary inline-flex items-center gap-2">
+            <TrendingUp size={16} />
+            Live XP sync
+          </div>
+        </div>
+        <div className="tab-rail" role="tablist" aria-label="Action categories">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              className={`tab ${activeTab === tab ? 'active' : ''}`}
+              onClick={() => setActiveTab(tab)}
+              aria-pressed={activeTab === tab}
+              role="tab"
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+        <div className="mt-4">{renderTabContent()}</div>
       </div>
-      <div className="mt-3">{renderTabContent()}</div>
-    </div>
+    </section>
   );
 };
 

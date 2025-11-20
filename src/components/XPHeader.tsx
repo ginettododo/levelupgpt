@@ -25,54 +25,85 @@ const XPHeader: React.FC = () => {
   };
 
   return (
-    <header
-      className="fixed top-0 left-0 right-0 z-40 glass-panel px-4 pt-[calc(env(safe-area-inset-top)+12px)] pb-3"
-      aria-label="XP header"
-    >
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="neon-card px-3 py-2 flex flex-col text-left shadow-neon-green">
-            <span className="text-[10px] tracking-widest uppercase text-white/70">Level</span>
-            <span className="text-2xl font-black">{levelInfo.level}</span>
+    <header className="fixed top-0 left-0 right-0 z-40 px-4 pt-[calc(env(safe-area-inset-top)+14px)]" aria-label="XP header">
+      <div className="relative overflow-hidden glass-panel rounded-3xl border border-white/10 shadow-2xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-white/0 to-white/5" aria-hidden="true" />
+        <div className="absolute -left-10 -top-10 w-40 h-40 bg-neon-work/10 blur-3xl" aria-hidden="true" />
+        <div className="absolute -right-10 -bottom-10 w-52 h-52 bg-neon-physical/10 blur-3xl" aria-hidden="true" />
+        <div className="relative px-5 pt-4 pb-5 space-y-4">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-white/60">LevelUp OS</p>
+              <p className="text-lg font-bold">Daily performance cockpit</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                className="pill ghost"
+                onClick={handleExport}
+                aria-label="Export data"
+              >
+                <Download size={16} />
+                <span className="hidden sm:inline">Export</span>
+              </button>
+              <button
+                type="button"
+                className="pill ghost"
+                onClick={() => fileInputRef.current?.click()}
+                aria-label="Import data"
+              >
+                <Upload size={16} />
+                <span className="hidden sm:inline">Import</span>
+              </button>
+              <input
+                ref={fileInputRef}
+                className="hidden"
+                type="file"
+                accept="application/json"
+                onChange={handleImport}
+              />
+            </div>
           </div>
-          <div className="text-xs text-white/80">
-            <p className="font-semibold">XP {levelInfo.currentXP.toFixed(0)}</p>
-            <p className="text-white/60">Next {levelInfo.nextLevelXP.toFixed(0)}</p>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="panel-tile">
+              <div className="flex items-end justify-between">
+                <div>
+                  <p className="label">Current level</p>
+                  <p className="text-3xl font-black leading-none">{levelInfo.level}</p>
+                </div>
+                <div className="status-chip">Prime streak</div>
+              </div>
+              <p className="text-sm text-white/70 mt-1">Progressive XP ladder with adaptive pacing.</p>
+            </div>
+            <div className="panel-tile">
+              <div className="flex items-center justify-between">
+                <p className="label">XP pulse</p>
+                <p className="text-sm font-semibold text-white">{levelInfo.currentXP.toFixed(0)} XP</p>
+              </div>
+              <div className="progress-shell" aria-hidden="true">
+                <div
+                  className="progress-bar"
+                  style={{ width: `${levelInfo.progress * 100}%` }}
+                  aria-hidden="true"
+                />
+              </div>
+              <div className="flex items-center justify-between text-[11px] text-white/60">
+                <span>Next {levelInfo.nextLevelXP.toFixed(0)} XP</span>
+                <span>{(levelInfo.progress * 100).toFixed(0)}% synced</span>
+              </div>
+            </div>
+            <div className="panel-tile">
+              <div className="flex items-center justify-between">
+                <p className="label">Backup & Sync</p>
+                <span className="status-chip soft">Local-first</span>
+              </div>
+              <p className="text-sm text-white/70">
+                Export and import your rituals to keep the streak alive across any device.
+              </p>
+              <p className="text-xs text-neon-physical font-semibold">Encrypted locally · Instant</p>
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            className="neon-pill glass-panel text-white flex items-center gap-1 active:scale-95 transition"
-            onClick={handleExport}
-            aria-label="Export data"
-          >
-            <Download size={16} />
-            <span className="hidden sm:inline">Export</span>
-          </button>
-          <button
-            type="button"
-            className="neon-pill glass-panel text-white flex items-center gap-1 active:scale-95 transition"
-            onClick={() => fileInputRef.current?.click()}
-            aria-label="Import data"
-          >
-            <Upload size={16} />
-            <span className="hidden sm:inline">Import</span>
-          </button>
-          <input
-            ref={fileInputRef}
-            className="hidden"
-            type="file"
-            accept="application/json"
-            onChange={handleImport}
-          />
-        </div>
-      </div>
-      <div className="mt-3 h-2 w-full rounded-full bg-lvl-800 overflow-hidden">
-        <div
-          className="h-full bg-gradient-to-r from-neon-physical via-neon-work to-neon-discipline"
-          style={{ width: `${levelInfo.progress * 100}%` }}
-        />
       </div>
     </header>
   );
