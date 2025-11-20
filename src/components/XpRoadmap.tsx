@@ -3,7 +3,11 @@ import React from 'react';
 import { useGame } from '../context/GameContext';
 import { endOfLevelXP, getLevelInfo, startOfLevelXP } from '../lib/gameLogic';
 
-const XpRoadmap: React.FC = () => {
+interface XpRoadmapProps {
+  sectionId?: string;
+}
+
+const XpRoadmap: React.FC<XpRoadmapProps> = ({ sectionId = 'roadmap' }) => {
   const { totalXP } = useGame();
   const levelInfo = getLevelInfo(totalXP);
   const startXP = startOfLevelXP(levelInfo.level);
@@ -11,7 +15,7 @@ const XpRoadmap: React.FC = () => {
   const percent = Math.min(((totalXP - startXP) / (endXP - startXP)) * 100, 100);
 
   return (
-    <section className="neon-card overflow-hidden border border-white/10" aria-label="XP roadmap">
+    <section id={sectionId} className="neon-card overflow-hidden border border-white/10" aria-label="XP roadmap">
       <div className="grid gap-6 sm:grid-cols-[2fr,1fr] p-5">
         <div className="space-y-3">
           <div className="flex items-center justify-between">

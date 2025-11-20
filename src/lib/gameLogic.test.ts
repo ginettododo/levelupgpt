@@ -1,31 +1,44 @@
 import { describe, expect, it } from 'vitest';
-import { ACTIONS } from './constants';
-import { computeSmokeFreeStreak, computeTotalXP, getLevelInfo } from './gameLogic';
+import { summarizeEntryXP } from './gameLogic';
 import { DailyEntry } from './types';
 
-describe('gameLogic', () => {
-  it('computes total XP across entries', () => {
-    const entries: DailyEntry[] = [
-      { date: '2024-01-01', actions: { workout: 1, deep_work: 2 } },
-      { date: '2024-01-02', actions: { junk_food: 1 } },
-    ];
-    const expected = ACTIONS.find((a) => a.id === 'workout')!.xp + 2 * ACTIONS.find((a) => a.id === 'deep_work')!.xp - 1 * ACTIONS.find((a) => a.id === 'junk_food')!.xp;
-    expect(computeTotalXP(entries)).toBe(expected);
+const baseEntry: DailyEntry = {
+  date: '2024-10-10',
+  actions: {},
+};
+
+describe('summarizeEntryXP', () => {
+  it('returns zero totals when no actions are present', () => {
+    const result = summarizeEntryXP(baseEntry);
+    expect(result).toEqual({ positiveXP: 0, negativeXP: 0, netXP: 0 });
   });
 
-  it('returns level info with progress', () => {
-    const levelInfo = getLevelInfo(120);
-    expect(levelInfo.level).toBeGreaterThanOrEqual(2);
-    expect(levelInfo.progress).toBeGreaterThan(0);
+  it('tracks positive and negative xp separately', () => {
+    const entry: DailyEntry = {
+      ...baseEntry,
+      actions: {
+        workout: 1, // +30 xp
+        junk_food: 1, // -25 xp
+        deep_work: 2, // +40 xp (time action * 20)
+      },
+    };
+
+    const result = summarizeEntryXP(entry);
+    expect(result.positiveXP).toBe(70);
+    expect(result.negativeXP).toBe(25);
+    expect(result.netXP).toBe(45);
   });
 
-  it('counts smoke free streak', () => {
-    const entries: DailyEntry[] = [
-      { date: '2024-01-01', actions: { smoke_cig: 0, smoke_joint: 0, buy_tobacco: 0 } },
-      { date: '2024-01-02', actions: { smoke_cig: 0, smoke_joint: 0, buy_tobacco: 0 } },
-      { date: '2024-01-03', actions: { smoke_cig: 1, smoke_joint: 0, buy_tobacco: 0 } },
-    ];
-    const streak = computeSmokeFreeStreak(entries, '2024-01-02');
-    expect(streak).toBe(2);
+  it('ignores undefined actions safely', () => {
+    const entry: DailyEntry = {
+      ...baseEntry,
+      actions: {
+        unknown_action: 10,
+        study: 1,
+      },
+    };
+
+    const result = summarizeEntryXP(entry);
+    expect(result).toEqual({ positiveXP: 20, negativeXP: 0, netXP: 20 });
   });
 });

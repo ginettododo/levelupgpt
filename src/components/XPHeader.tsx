@@ -3,7 +3,11 @@ import React, { useRef } from 'react';
 import { useGame } from '../context/GameContext';
 import { getLevelInfo } from '../lib/gameLogic';
 
-const XPHeader: React.FC = () => {
+interface XPHeaderProps {
+  sectionId?: string;
+}
+
+const XPHeader: React.FC<XPHeaderProps> = ({ sectionId = 'status' }) => {
   const { totalXP, exportData, importData } = useGame();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const levelInfo = getLevelInfo(totalXP);
@@ -25,7 +29,11 @@ const XPHeader: React.FC = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 px-4 pt-[calc(env(safe-area-inset-top)+14px)]" aria-label="XP header">
+    <header
+      id={sectionId}
+      className="fixed top-0 left-0 right-0 z-40 px-4 pt-[calc(env(safe-area-inset-top)+14px)]"
+      aria-label="XP header"
+    >
       <div className="relative overflow-hidden glass-panel rounded-3xl border border-white/10 shadow-2xl">
         <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-white/0 to-white/5" aria-hidden="true" />
         <div className="absolute -left-10 -top-10 w-40 h-40 bg-neon-work/10 blur-3xl" aria-hidden="true" />

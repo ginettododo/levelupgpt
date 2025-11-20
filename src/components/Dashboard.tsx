@@ -4,13 +4,18 @@ import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 import { useGame, useTodayEntry } from '../context/GameContext';
 import { getDateKey } from '../lib/gameLogic';
 import ActionGrid from './ActionGrid';
+import ActionIntake from './ActionIntake';
 import DailyMissions from './DailyMissions';
 
 const tabs = ['OVERVIEW', 'PHYSICAL', 'WORK', 'DISCIPLINE', 'SOCIAL', 'VICES'] as const;
 
 type TabKey = (typeof tabs)[number];
 
-const Dashboard: React.FC = () => {
+interface DashboardProps {
+  sectionId?: string;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ sectionId = 'dashboard' }) => {
   const [activeTab, setActiveTab] = useState<TabKey>('OVERVIEW');
   const { entries } = useGame();
   const today = useTodayEntry();
@@ -93,8 +98,9 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <section className="space-y-5" aria-label="Dashboard">
-      <div className="card-surface">
+    <section className="space-y-5" aria-label="Dashboard" id={sectionId}>
+      <ActionIntake />
+      <div className="card-surface" id="insights">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="label">Mission control</p>

@@ -70,6 +70,10 @@ body {
   @apply text-neon-discipline border-neon-discipline/30 bg-neon-discipline/10;
 }
 
+.pill.danger {
+  @apply bg-neon-negative/20 text-neon-negative border border-neon-negative/40;
+}
+
 .label {
   @apply text-[10px] uppercase tracking-[0.2em] text-white/60;
 }
@@ -160,4 +164,56 @@ body {
 
 .mission-complete {
   @apply border-neon-physical/50 shadow-neon-green;
+}
+
+.action-shell {
+  @apply neon-card border border-white/10 p-4 space-y-4;
+}
+
+.action-column {
+  @apply rounded-2xl border border-white/10 p-3 backdrop-blur-md bg-white/5 space-y-2 shadow-inner shadow-black/30;
+}
+
+.action-column.positive {
+  @apply border-neon-physical/40 bg-neon-physical/5;
+}
+
+.action-column.negative {
+  @apply border-neon-negative/40 bg-neon-negative/5;
+}
+
+.column-header {
+  @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/70;
+}
+
+.metric-chip {
+  @apply inline-flex items-center gap-2 rounded-full px-3 py-2 text-[11px] font-semibold bg-white/10 border border-white/10;
+}
+
+.metric-chip.success {
+  @apply text-neon-physical border-neon-physical/40 bg-neon-physical/10;
+}
+
+.metric-chip.warning {
+  @apply text-neon-negative border-neon-negative/50 bg-neon-negative/10;
+}
+
+.action-tile {
+  @apply panel flex flex-col gap-3 border-white/10 bg-lvl-900/80;
+}
+
+.action-positive {
+  @apply hover:border-neon-physical/40 hover:bg-neon-physical/10;
+}
+
+.action-negative {
+  @apply hover:border-neon-negative/40 hover:bg-neon-negative/5;
+}
+
+.toggle-chip {
+  @apply pill ghost w-full justify-center text-center;
+}
+
+.toggle-chip-active {
+  @apply bg-gradient-to-r from-neon-physical to-neon-work text-black border-transparent shadow-neon-green;
 }
