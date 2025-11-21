@@ -8,22 +8,19 @@ import { GameProvider } from './context/GameContext';
 const App: React.FC = () => {
   return (
     <GameProvider>
-      <div className="relative min-h-screen bg-lvl-black text-white overflow-hidden">
-        <div className="hud-gradient" aria-hidden="true" />
-        <div className="hud-grid" aria-hidden="true" />
+      <div className="app-shell">
+        <div className="surface-noise" aria-hidden="true" />
+        <div className="scanlines" aria-hidden="true" />
         <XPHeader sectionId="status" />
-        <main className="relative z-10 max-w-6xl mx-auto px-4 pt-[210px] pb-[150px] space-y-10">
+        <main className="content-shell">
           <XpRoadmap sectionId="roadmap" />
           <Dashboard sectionId="actions" />
         </main>
-        <nav
-          className="fixed bottom-0 left-0 right-0 pb-[calc(env(safe-area-inset-bottom)+18px)] z-40 flex justify-center"
-          aria-label="Quick actions"
-        >
-          <div className="command-dock">
+        <nav className="floating-nav" aria-label="Quick actions">
+          <div className="nav-rail">
             <button
               type="button"
-              className="dock-button"
+              className="nav-button"
               aria-label="Dashboard"
               onClick={() => document.getElementById('actions')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
             >
@@ -32,16 +29,16 @@ const App: React.FC = () => {
             </button>
             <button
               type="button"
-              className="dock-button"
+              className="nav-button"
               aria-label="Insights"
               onClick={() => document.getElementById('roadmap')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
             >
               <Sparkles size={18} />
-              <span className="hidden sm:inline">Insights</span>
+              <span className="hidden sm:inline">Roadmap</span>
             </button>
             <button
               type="button"
-              className="dock-button"
+              className="nav-button"
               aria-label="Profilo & backup"
               onClick={() => document.getElementById('status')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
             >
@@ -50,7 +47,7 @@ const App: React.FC = () => {
             </button>
             <button
               type="button"
-              className="dock-button primary"
+              className="nav-button primary"
               aria-label="Safety"
               onClick={() => document.getElementById('actions-intake')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
             >

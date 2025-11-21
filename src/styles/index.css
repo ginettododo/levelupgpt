@@ -6,140 +6,158 @@
   color-scheme: dark;
 }
 
+* {
+  @apply antialiased;
+}
+
 body {
-  @apply bg-lvl-black text-white min-h-screen font-sans;
+  @apply bg-black text-white min-h-screen font-sans;
   margin: 0;
 }
 
-.hud-gradient {
-  @apply absolute inset-0;
-  background: radial-gradient(circle at 20% 20%, rgba(0, 255, 157, 0.1), transparent 25%),
-    radial-gradient(circle at 80% 10%, rgba(0, 240, 255, 0.1), transparent 22%),
-    radial-gradient(circle at 50% 70%, rgba(189, 0, 255, 0.08), transparent 30%);
+.app-shell {
+  @apply relative min-h-screen overflow-hidden bg-gradient-to-b from-black via-neutral-950 to-black text-white;
 }
 
-.hud-grid {
-  @apply absolute inset-0 opacity-30 pointer-events-none;
-  background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 80px 80px;
+.surface-noise {
+  @apply pointer-events-none absolute inset-0 opacity-60 mix-blend-screen;
+  background: radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.05), transparent 18%),
+    radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.05), transparent 16%),
+    radial-gradient(circle at 50% 60%, rgba(255, 255, 255, 0.06), transparent 30%);
+  filter: saturate(0.6) blur(28px);
+}
+
+.scanlines {
+  @apply pointer-events-none absolute inset-0 opacity-10;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size: 100% 14px;
   mask-image: radial-gradient(circle at 50% 30%, black 0%, transparent 70%);
 }
 
-.glass-panel {
-  @apply bg-lvl-900/90 backdrop-blur-md border border-white/10 shadow-lg;
+.content-shell {
+  @apply relative z-10 max-w-6xl mx-auto px-4 pt-[220px] pb-28 space-y-10;
 }
 
-.neon-card {
-  @apply border border-white/10 bg-lvl-900/80 backdrop-blur-md rounded-2xl shadow-md;
+.section-shell {
+  @apply relative space-y-4;
 }
 
-.neon-pill {
-  @apply rounded-full px-3 py-1 text-[10px] tracking-widest uppercase font-semibold;
+.hero-shell {
+  @apply fixed top-0 left-0 right-0 z-40 px-4 pt-[calc(env(safe-area-inset-top)+12px)];
 }
 
-.command-dock {
-  @apply glass-panel flex items-center gap-2 px-4 py-3 rounded-full shadow-2xl border-white/20;
+.hero-card {
+  @apply relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 via-white/0 to-white/5 backdrop-blur-xl shadow-2xl;
 }
 
-.dock-button {
-  @apply flex items-center gap-1 px-3 py-1 text-sm text-white/80 rounded-full transition hover:text-white hover:bg-white/5 active:scale-95;
+.hero-grid {
+  @apply absolute inset-0 opacity-25 pointer-events-none;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 80px 80px;
 }
 
-.dock-button.primary {
-  @apply bg-gradient-to-r from-neon-work to-neon-discipline text-black font-semibold shadow-neon-blue;
+.hero-accent {
+  @apply absolute -left-16 top-0 h-40 w-40 rounded-full bg-white/10 blur-3xl;
 }
 
-.pill {
-  @apply inline-flex items-center justify-center gap-1 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em];
+.hero-accent.secondary {
+  @apply right-0 left-auto bottom-0 top-auto h-56 w-56;
 }
 
-.pill.ghost {
-  @apply bg-white/5 text-white/80 border border-white/10 hover:text-white hover:border-white/20 active:scale-95;
+.inner-shell {
+  @apply relative px-5 pt-4 pb-5 space-y-5;
 }
 
-.pill.primary {
-  @apply bg-gradient-to-r from-neon-physical via-neon-work to-neon-discipline text-black shadow-neon-blue;
+.eyebrow {
+  @apply text-[10px] uppercase tracking-[0.24em] text-white/50;
 }
 
-.pill.subtle {
-  @apply bg-white/5 text-white/70 border border-white/5;
+.microcopy {
+  @apply text-[10px] uppercase tracking-[0.2em] text-white/50;
 }
 
-.pill.subtle.alt {
-  @apply text-neon-discipline border-neon-discipline/30 bg-neon-discipline/10;
+.title-xl {
+  @apply text-2xl font-bold leading-tight;
 }
 
-.pill.danger {
-  @apply bg-neon-negative/20 text-neon-negative border border-neon-negative/40;
+.muted {
+  @apply text-sm text-white/60;
 }
 
-.label {
-  @apply text-[10px] uppercase tracking-[0.2em] text-white/60;
+.mono-card {
+  @apply relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg transition transform duration-500 hover:-translate-y-1 hover:shadow-2xl;
 }
 
-.panel-tile {
-  @apply rounded-2xl border border-white/10 bg-white/5 p-4 shadow-inner shadow-black/40 flex flex-col gap-2;
+.mono-card::after {
+  content: "";
+  @apply absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-40;
 }
 
-.status-chip {
-  @apply inline-flex items-center rounded-full bg-neon-work/10 text-neon-work px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em];
+.card-body {
+  @apply relative p-5 space-y-4;
 }
 
-.status-chip.soft {
-  @apply bg-white/10 text-white/70;
+.subtle-divider {
+  @apply h-px w-full bg-white/10;
 }
 
-.progress-shell {
-  @apply relative h-2 w-full rounded-full bg-lvl-800 overflow-hidden;
+.stats-grid {
+  @apply grid gap-3 sm:grid-cols-3;
 }
 
-.progress-bar {
-  @apply absolute left-0 top-0 h-full bg-gradient-to-r from-neon-physical via-neon-work to-neon-discipline shadow-neon-blue;
+.stat-card {
+  @apply rounded-2xl border border-white/10 bg-black/40 p-4 space-y-2 shadow-inner shadow-black/40;
 }
 
-.panel-stack {
-  @apply grid gap-3 sm:grid-cols-2;
+.progress-track {
+  @apply relative h-2 w-full overflow-hidden rounded-full bg-white/10;
 }
 
-.panel {
-  @apply rounded-2xl border border-white/10 bg-lvl-900/70 p-4 backdrop-blur-lg shadow-lg;
+.progress-meter {
+  @apply absolute left-0 top-0 h-full bg-white;
+  box-shadow: 0 0 24px 2px rgba(255, 255, 255, 0.35);
+  animation: shimmer 8s linear infinite;
 }
 
-.signal {
-  @apply panel flex items-start justify-between;
+.segmented {
+  @apply inline-flex rounded-full border border-white/10 bg-black/40 p-1 shadow-inner shadow-black/40;
 }
 
-.signal.success {
-  @apply border-neon-physical/50 shadow-neon-green;
+.segment {
+  @apply rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-white/60 transition;
 }
 
-.signal.alert {
-  @apply border-neon-negative/60 shadow-neon-red;
+.segment.active {
+  @apply bg-white text-black shadow-lg;
 }
 
-.card-surface {
-  @apply neon-card p-4 border-white/10;
+.badge {
+  @apply inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70;
 }
 
-.tab-rail {
-  @apply mt-3 flex flex-wrap gap-2 bg-white/5 p-2 rounded-2xl border border-white/10;
+.badge.primary {
+  @apply bg-white text-black border-transparent;
 }
 
-.tab {
-  @apply pill ghost text-xs;
+.badge.ghost {
+  @apply bg-white/5 text-white/70;
 }
 
-.tab.active {
-  @apply bg-gradient-to-r from-neon-work to-neon-discipline text-black shadow-neon-blue border-transparent;
+.badge.warn {
+  @apply text-amber-200 border-amber-200/40 bg-amber-200/10;
 }
 
-.tile {
-  @apply panel flex flex-col gap-3 transition hover:border-white/20 hover:bg-white/10;
+.grid-tiles {
+  @apply grid gap-3 sm:grid-cols-2 lg:grid-cols-3;
 }
 
-.tile-active {
-  @apply border-neon-physical/50 shadow-neon-green;
+.tile-card {
+  @apply rounded-2xl border border-white/10 bg-black/60 p-4 space-y-2 transition duration-300 hover:border-white/30 hover:bg-white/5;
+}
+
+.tile-card.active {
+  @apply border-white shadow-xl;
 }
 
 .tile-title {
@@ -150,70 +168,106 @@ body {
   @apply flex items-center gap-2;
 }
 
+.counter button {
+  @apply h-9 w-9 rounded-full border border-white/15 bg-white/5 text-lg font-bold text-white transition hover:bg-white/15 active:scale-95;
+}
+
 .counter-value {
-  @apply text-xl font-black;
+  @apply text-2xl font-black;
 }
 
 .hour-grid {
   @apply grid grid-cols-5 gap-2;
 }
 
-.mission {
-  @apply panel flex flex-col gap-2 border-white/10;
+.hour-grid button {
+  @apply rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/15 active:scale-95;
 }
 
-.mission-complete {
-  @apply border-neon-physical/50 shadow-neon-green;
+.hour-grid button.active {
+  @apply bg-white text-black;
 }
 
-.action-shell {
-  @apply neon-card border border-white/10 p-4 space-y-4;
+.action-panel {
+  @apply grid gap-3 lg:grid-cols-2;
 }
 
 .action-column {
-  @apply rounded-2xl border border-white/10 p-3 backdrop-blur-md bg-white/5 space-y-2 shadow-inner shadow-black/30;
-}
-
-.action-column.positive {
-  @apply border-neon-physical/40 bg-neon-physical/5;
-}
-
-.action-column.negative {
-  @apply border-neon-negative/40 bg-neon-negative/5;
-}
-
-.column-header {
-  @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/70;
-}
-
-.metric-chip {
-  @apply inline-flex items-center gap-2 rounded-full px-3 py-2 text-[11px] font-semibold bg-white/10 border border-white/10;
-}
-
-.metric-chip.success {
-  @apply text-neon-physical border-neon-physical/40 bg-neon-physical/10;
-}
-
-.metric-chip.warning {
-  @apply text-neon-negative border-neon-negative/50 bg-neon-negative/10;
+  @apply rounded-2xl border border-white/10 bg-black/60 p-4 space-y-3 shadow-inner shadow-black/40;
 }
 
 .action-tile {
-  @apply panel flex flex-col gap-3 border-white/10 bg-lvl-900/80;
+  @apply rounded-2xl border border-white/10 bg-white/5 p-3 space-y-3 transition duration-300 hover:-translate-y-1 hover:border-white/30 hover:bg-white/10;
 }
 
-.action-positive {
-  @apply hover:border-neon-physical/40 hover:bg-neon-physical/10;
+.action-tile.negative {
+  @apply border-red-200/30 bg-red-200/5;
 }
 
-.action-negative {
-  @apply hover:border-neon-negative/40 hover:bg-neon-negative/5;
+.action-tile .microcopy {
+  @apply text-[11px] uppercase tracking-[0.18em] text-white/50;
 }
 
 .toggle-chip {
-  @apply pill ghost w-full justify-center text-center;
+  @apply inline-flex items-center justify-center rounded-full border border-white/15 px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/70 transition hover:border-white/30 hover:text-white;
 }
 
 .toggle-chip-active {
-  @apply bg-gradient-to-r from-neon-physical to-neon-work text-black border-transparent shadow-neon-green;
+  @apply bg-white text-black border-transparent shadow-lg;
+}
+
+.metric-row {
+  @apply flex flex-wrap gap-2;
+}
+
+.mission-card {
+  @apply rounded-2xl border border-white/10 bg-black/50 p-4 space-y-3 transition duration-300 hover:border-white/30 hover:bg-white/5;
+}
+
+.mission-card.complete {
+  @apply border-white bg-white/10 shadow-xl;
+}
+
+.chart-shell {
+  @apply rounded-2xl border border-white/10 bg-black/60 p-4 shadow-inner shadow-black/40;
+}
+
+.floating-nav {
+  @apply fixed bottom-0 left-0 right-0 z-40 pb-[calc(env(safe-area-inset-bottom)+18px)] flex justify-center;
+}
+
+.nav-rail {
+  @apply flex items-center gap-2 rounded-full border border-white/15 bg-black/80 px-3 py-2 shadow-2xl backdrop-blur-xl;
+}
+
+.nav-button {
+  @apply inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold text-white/70 transition duration-300 hover:bg-white/10 hover:text-white active:scale-95;
+}
+
+.nav-button.primary {
+  @apply bg-white text-black shadow-lg;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-30%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: rise 0.8s ease forwards;
 }

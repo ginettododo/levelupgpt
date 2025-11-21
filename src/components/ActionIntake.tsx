@@ -18,17 +18,16 @@ const QuickActionRow: React.FC<{
   const isCounter = action.type === 'counter';
   const isTime = action.type === 'time';
   const safeValue = Math.max(value, 0);
-  const pillTone = isNegative ? 'danger' : 'primary';
 
   return (
-    <div className={`action-tile ${isNegative ? 'action-negative' : 'action-positive'}`}>
+    <div className={`action-tile ${isNegative ? 'negative' : ''}`}>
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="label">{isNegative ? 'Abitudine da evitare' : 'Rituale positivo'}</p>
+          <p className="microcopy">{isNegative ? 'Habits to avoid' : 'Positive ritual'}</p>
           <p className="tile-title leading-tight">{action.label}</p>
-          <p className="text-[11px] text-white/60">{action.type === 'time' ? 'Ore stimate' : 'Tocca per aggiornare'}</p>
+          <p className="text-[11px] text-white/50">{action.type === 'time' ? 'Hours' : 'Tap to update'}</p>
         </div>
-        <span className={`pill ${pillTone} text-[10px]`}>{action.xp} XP</span>
+        <span className={`badge ${isNegative ? 'warn' : 'primary'}`}>{action.xp} XP</span>
       </div>
       {isBoolean && (
         <button
@@ -37,26 +36,16 @@ const QuickActionRow: React.FC<{
           onClick={() => onUpdate(safeValue ? 0 : 1)}
           aria-pressed={safeValue > 0}
         >
-          {safeValue ? 'Segnato' : 'Completa'}
+          {safeValue ? 'Logged' : 'Complete'}
         </button>
       )}
       {(isCounter || isTime) && (
         <div className="counter">
-          <button
-            type="button"
-            className="pill ghost"
-            onClick={() => onUpdate(Math.max(safeValue - 1, 0))}
-            aria-label={`Riduci ${action.label}`}
-          >
+          <button type="button" onClick={() => onUpdate(Math.max(safeValue - 1, 0))} aria-label={`Reduce ${action.label}`}>
             -
           </button>
           <span className="counter-value">{safeValue}</span>
-          <button
-            type="button"
-            className="pill ghost"
-            onClick={() => onUpdate(safeValue + 1)}
-            aria-label={`Aumenta ${action.label}`}
-          >
+          <button type="button" onClick={() => onUpdate(safeValue + 1)} aria-label={`Increase ${action.label}`}>
             +
           </button>
         </div>
@@ -80,61 +69,65 @@ const ActionIntake: React.FC = () => {
   const negativeActions = ACTIONS.filter((action) => negativeActionIds.includes(action.id));
 
   return (
-    <section id="actions-intake" className="action-shell" aria-label="Attività positive e negative">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="label">Sezione principale</p>
-          <h2 className="text-xl font-bold">Attività positive / negative</h2>
-          <p className="text-sm text-white/70">Registra i rituali chiave e blocca subito le distrazioni.</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <div className="metric-chip">
-            <Heart size={14} />
-            <span>{positiveXP.toFixed(0)} XP positivi</span>
+    <section id="actions-intake" className="section-shell" aria-label="Attività positive e negative">
+      <div className="mono-card fade-in">
+        <div className="card-body space-y-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="eyebrow">Main stack</p>
+              <h2 className="title-xl">Positive / negative rituals</h2>
+              <p className="muted">Monochrome controls with animated feedback.</p>
+            </div>
+            <div className="metric-row">
+              <div className="badge ghost">
+                <Heart size={14} />
+                <span>{positiveXP.toFixed(0)} XP</span>
+              </div>
+              <div className="badge warn">
+                <ShieldAlert size={14} />
+                <span>{negativeXP.toFixed(0)} XP</span>
+              </div>
+              <div className={`badge ${netXP >= 0 ? 'primary' : 'warn'}`}>
+                <Flame size={14} />
+                <span>Net {netXP >= 0 ? '+' : ''}{netXP.toFixed(0)} XP</span>
+              </div>
+            </div>
           </div>
-          <div className="metric-chip warning">
-            <ShieldAlert size={14} />
-            <span>{negativeXP.toFixed(0)} XP a rischio</span>
-          </div>
-          <div className={`metric-chip ${netXP >= 0 ? 'success' : 'warning'}`}>
-            <Flame size={14} />
-            <span>Bilancio {netXP >= 0 ? '+' : ''}{netXP.toFixed(0)} XP</span>
-          </div>
-        </div>
-      </div>
 
-      <div className="grid gap-3 lg:grid-cols-2">
-        <div className="action-column positive">
-          <div className="column-header">
-            <Heart size={14} />
-            <span>Azioni positive</span>
-          </div>
-          <div className="grid gap-2 sm:grid-cols-2">
-            {positiveActions.map((action) => (
-              <QuickActionRow
-                key={action.id}
-                action={action}
-                value={entry.actions[action.id] ?? 0}
-                onUpdate={(next) => persistAction(action.id, next)}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="action-column negative">
-          <div className="column-header">
-            <ShieldAlert size={14} />
-            <span>Azioni negative</span>
-          </div>
-          <div className="grid gap-2 sm:grid-cols-2">
-            {negativeActions.map((action) => (
-              <QuickActionRow
-                key={action.id}
-                action={action}
-                value={entry.actions[action.id] ?? 0}
-                onUpdate={(next) => persistAction(action.id, next)}
-                isNegative
-              />
-            ))}
+          <div className="action-panel">
+            <div className="action-column">
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/70">
+                <Heart size={14} />
+                <span>Positive actions</span>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {positiveActions.map((action) => (
+                  <QuickActionRow
+                    key={action.id}
+                    action={action}
+                    value={entry.actions[action.id] ?? 0}
+                    onUpdate={(next) => persistAction(action.id, next)}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="action-column">
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/70">
+                <ShieldAlert size={14} />
+                <span>Negative actions</span>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {negativeActions.map((action) => (
+                  <QuickActionRow
+                    key={action.id}
+                    action={action}
+                    value={entry.actions[action.id] ?? 0}
+                    onUpdate={(next) => persistAction(action.id, next)}
+                    isNegative
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
