@@ -29,25 +29,22 @@ const XPHeader: React.FC<XPHeaderProps> = ({ sectionId = 'status' }) => {
   };
 
   return (
-    <header
-      id={sectionId}
-      className="fixed top-0 left-0 right-0 z-40 px-4 pt-[calc(env(safe-area-inset-top)+14px)]"
-      aria-label="XP header"
-    >
-      <div className="relative overflow-hidden glass-panel rounded-3xl border border-white/10 shadow-2xl">
-        <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-white/0 to-white/5" aria-hidden="true" />
-        <div className="absolute -left-10 -top-10 w-40 h-40 bg-neon-work/10 blur-3xl" aria-hidden="true" />
-        <div className="absolute -right-10 -bottom-10 w-52 h-52 bg-neon-physical/10 blur-3xl" aria-hidden="true" />
-        <div className="relative px-5 pt-4 pb-5 space-y-4">
-          <div className="flex items-center justify-between gap-3">
+    <header id={sectionId} className="hero-shell" aria-label="XP header">
+      <div className="hero-card fade-in">
+        <div className="hero-grid" aria-hidden="true" />
+        <div className="hero-accent" aria-hidden="true" />
+        <div className="hero-accent secondary" aria-hidden="true" />
+        <div className="inner-shell">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-[10px] uppercase tracking-[0.2em] text-white/60">LevelUp OS</p>
-              <p className="text-lg font-bold">Daily performance cockpit</p>
+              <p className="eyebrow">LevelUp OS</p>
+              <p className="title-xl">Monochrome performance cockpit</p>
+              <p className="muted">Black & white, animated, with a calm control-room feel.</p>
             </div>
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                className="pill ghost"
+                className="badge ghost"
                 onClick={handleExport}
                 aria-label="Export data"
               >
@@ -56,7 +53,7 @@ const XPHeader: React.FC<XPHeaderProps> = ({ sectionId = 'status' }) => {
               </button>
               <button
                 type="button"
-                className="pill ghost"
+                className="badge ghost"
                 onClick={() => fileInputRef.current?.click()}
                 aria-label="Import data"
               >
@@ -72,43 +69,33 @@ const XPHeader: React.FC<XPHeaderProps> = ({ sectionId = 'status' }) => {
               />
             </div>
           </div>
-          <div className="grid gap-3 sm:grid-cols-3">
-            <div className="panel-tile">
-              <div className="flex items-end justify-between">
-                <div>
-                  <p className="label">Current level</p>
-                  <p className="text-3xl font-black leading-none">{levelInfo.level}</p>
-                </div>
-                <div className="status-chip">Prime streak</div>
-              </div>
-              <p className="text-sm text-white/70 mt-1">Progressive XP ladder with adaptive pacing.</p>
+
+          <div className="stats-grid">
+            <div className="stat-card">
+              <p className="eyebrow">Current level</p>
+              <p className="text-4xl font-black leading-none">{levelInfo.level}</p>
+              <p className="muted">Minimal XP ladder tuned to your pace.</p>
             </div>
-            <div className="panel-tile">
+            <div className="stat-card space-y-3">
               <div className="flex items-center justify-between">
-                <p className="label">XP pulse</p>
-                <p className="text-sm font-semibold text-white">{levelInfo.currentXP.toFixed(0)} XP</p>
+                <p className="eyebrow">XP pulse</p>
+                <span className="badge primary">{levelInfo.currentXP.toFixed(0)} XP</span>
               </div>
-              <div className="progress-shell" aria-hidden="true">
-                <div
-                  className="progress-bar"
-                  style={{ width: `${levelInfo.progress * 100}%` }}
-                  aria-hidden="true"
-                />
+              <div className="progress-track" aria-hidden="true">
+                <div className="progress-meter" style={{ width: `${levelInfo.progress * 100}%` }} />
               </div>
               <div className="flex items-center justify-between text-[11px] text-white/60">
                 <span>Next {levelInfo.nextLevelXP.toFixed(0)} XP</span>
                 <span>{(levelInfo.progress * 100).toFixed(0)}% synced</span>
               </div>
             </div>
-            <div className="panel-tile">
+            <div className="stat-card">
               <div className="flex items-center justify-between">
-                <p className="label">Backup & Sync</p>
-                <span className="status-chip soft">Local-first</span>
+                <p className="eyebrow">Backup & Sync</p>
+                <span className="badge ghost">Local-first</span>
               </div>
-              <p className="text-sm text-white/70">
-                Export and import your rituals to keep the streak alive across any device.
-              </p>
-              <p className="text-xs text-neon-physical font-semibold">Encrypted locally · Instant</p>
+              <p className="muted">Export/import rituals to keep streaks safe everywhere.</p>
+              <p className="text-xs font-semibold text-white">Encrypted locally · Instant</p>
             </div>
           </div>
         </div>

@@ -40,20 +40,16 @@ const DailyMissions: React.FC = () => {
       {missions.map((mission) => {
         const passed = mission.validator(entry.actions);
         return (
-          <div
-            key={mission.id}
-            className={`mission ${passed ? 'mission-complete' : ''}`}
-            aria-label={mission.title}
-          >
+          <div key={mission.id} className={`mission-card ${passed ? 'complete' : ''}`} aria-label={mission.title}>
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="label">{mission.title}</p>
-                <p className="text-sm text-white/70">{mission.description}</p>
+                <p className="eyebrow">{mission.title}</p>
+                <p className="muted text-xs sm:text-sm">{mission.description}</p>
               </div>
-              {passed ? <CheckCircle2 className="text-neon-physical" /> : <Shield className="text-white/60" />}
+              {passed ? <CheckCircle2 className="text-white" /> : <Shield className="text-white/60" />}
             </div>
             {!passed && (
-              <div className="flex items-center gap-2 text-xs text-neon-negative font-semibold">
+              <div className="flex items-center gap-2 text-xs text-white font-semibold">
                 <Skull size={14} />
                 <span>Miss this and streak breaks</span>
               </div>

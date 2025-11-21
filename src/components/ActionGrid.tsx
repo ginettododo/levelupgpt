@@ -19,7 +19,7 @@ const ActionGrid: React.FC<Props> = ({ category }) => {
   const renderCard = (actionId: string, label: string, type: string) => {
     const currentValue = entry.actions[actionId] ?? 0;
     const isActive = currentValue > 0;
-    const cardClass = `tile ${isActive ? 'tile-active' : ''}`;
+    const cardClass = `tile-card ${isActive ? 'active' : ''}`;
 
     if (type === 'boolean') {
       return (
@@ -30,10 +30,10 @@ const ActionGrid: React.FC<Props> = ({ category }) => {
           aria-pressed={isActive}
         >
           <div>
-            <p className="label">Toggle</p>
+            <p className="microcopy">Toggle</p>
             <p className="tile-title">{label}</p>
           </div>
-          <span className="pill subtle">{isActive ? 'Completed' : 'Tap to complete'}</span>
+          <span className={`badge ${isActive ? 'primary' : 'ghost'}`}>{isActive ? 'Completed' : 'Tap to complete'}</span>
         </button>
       );
     }
@@ -42,25 +42,15 @@ const ActionGrid: React.FC<Props> = ({ category }) => {
       return (
         <div key={actionId} className={cardClass} role="group" aria-label={label}>
           <div>
-            <p className="label">Count</p>
+            <p className="microcopy">Count</p>
             <p className="tile-title">{label}</p>
           </div>
           <div className="counter">
-            <button
-              type="button"
-              className="pill ghost"
-              onClick={() => updateAction(actionId, currentValue - 1)}
-              aria-label={`Decrease ${label}`}
-            >
+            <button type="button" onClick={() => updateAction(actionId, currentValue - 1)} aria-label={`Decrease ${label}`}>
               -
             </button>
             <span className="counter-value">{currentValue}</span>
-            <button
-              type="button"
-              className="pill ghost"
-              onClick={() => updateAction(actionId, currentValue + 1)}
-              aria-label={`Increase ${label}`}
-            >
+            <button type="button" onClick={() => updateAction(actionId, currentValue + 1)} aria-label={`Increase ${label}`}>
               +
             </button>
           </div>
@@ -71,7 +61,7 @@ const ActionGrid: React.FC<Props> = ({ category }) => {
     return (
       <div key={actionId} className={cardClass}>
         <div>
-          <p className="label">Hours</p>
+          <p className="microcopy">Hours</p>
           <p className="tile-title">{label}</p>
         </div>
         <div className="hour-grid">
@@ -82,7 +72,7 @@ const ActionGrid: React.FC<Props> = ({ category }) => {
               <button
                 key={value}
                 type="button"
-                className={`pill ${selected ? 'primary' : 'ghost'}`}
+                className={selected ? 'active' : ''}
                 onClick={() => updateAction(actionId, value === 4 ? 4 : value)}
               >
                 {labelText}
@@ -94,7 +84,7 @@ const ActionGrid: React.FC<Props> = ({ category }) => {
     );
   };
 
-  return <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">{actions.map((action) => renderCard(action.id, action.label, action.type))}</div>;
+  return <div className="grid-tiles">{actions.map((action) => renderCard(action.id, action.label, action.type))}</div>;
 };
 
 export default ActionGrid;

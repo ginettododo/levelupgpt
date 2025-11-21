@@ -23,8 +23,8 @@ const Dashboard: React.FC<DashboardProps> = ({ sectionId = 'dashboard' }) => {
   const status = useMemo(() => {
     const hasNegative = Object.entries(today.actions).some(([, count]) => count < 0);
     return hasNegative
-      ? { label: 'Recovery Mode', tone: 'alert', hint: 'Reset rituals & protect streaks' }
-      : { label: 'Clean & Focused', tone: 'success', hint: 'Momentum locked in' };
+      ? { label: 'Recovery mode', tone: 'alert', hint: 'Reset rituals & protect streaks' }
+      : { label: 'Clean & focused', tone: 'success', hint: 'Momentum locked in' };
   }, [today.actions]);
 
   const chartData = useMemo(() => {
@@ -34,9 +34,7 @@ const Dashboard: React.FC<DashboardProps> = ({ sectionId = 'dashboard' }) => {
       date.setDate(date.getDate() - i);
       const key = getDateKey(date);
       const entry = entries.find((item) => item.date === key);
-      const value = entry
-        ? Object.values(entry.actions).reduce((sum, count) => sum + count, 0)
-        : 0;
+      const value = entry ? Object.values(entry.actions).reduce((sum, count) => sum + count, 0) : 0;
       days.push({ date: key.slice(5), value });
     }
     return days;
@@ -52,80 +50,81 @@ const Dashboard: React.FC<DashboardProps> = ({ sectionId = 'dashboard' }) => {
 
     return (
       <div className="space-y-4">
-        <div className="panel-stack">
-          <div className={`signal ${status.tone}`}>
-            <div>
-              <p className="label">Status</p>
-              <p className="text-xl font-semibold">{status.label}</p>
-              <p className="text-sm text-white/70">{status.hint}</p>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="stat-card">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="eyebrow">Status</p>
+                <p className="text-xl font-semibold">{status.label}</p>
+                <p className="muted">{status.hint}</p>
+              </div>
+              {status.tone === 'alert' ? <AlertOctagon /> : <Sparkle />}
             </div>
-            {status.tone === 'alert' ? <AlertOctagon /> : <Sparkle />}
           </div>
-          <div className="panel">
+          <div className="chart-shell">
             <div className="flex items-center justify-between mb-2">
-              <p className="label">Last 7 days</p>
-              <div className="status-chip soft">Velocity</div>
+              <p className="eyebrow">Last 7 days</p>
+              <div className="badge ghost">Velocity</div>
             </div>
             <div className="h-40 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 8, right: 8, left: 8, bottom: 4 }}>
-                  <XAxis dataKey="date" stroke="#9ca3af" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} />
-                  <Tooltip contentStyle={{ background: '#0f0f11', border: '1px solid rgba(255,255,255,0.1)' }} />
-                  <Bar dataKey="value" radius={[6, 6, 6, 6]} fill="url(#neonGradient)" />
-                  <defs>
-                    <linearGradient id="neonGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#00f0ff" stopOpacity={0.9} />
-                      <stop offset="95%" stopColor="#bd00ff" stopOpacity={0.7} />
-                    </linearGradient>
-                  </defs>
+                  <XAxis dataKey="date" stroke="#d1d5db" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <Tooltip contentStyle={{ background: '#0b0b0b', border: '1px solid rgba(255,255,255,0.15)' }} />
+                  <Bar dataKey="value" radius={[8, 8, 8, 8]} fill="rgba(255,255,255,0.85)" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
         </div>
-        <div className="panel">
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              <p className="label">Daily missions</p>
-              <p className="text-sm text-white/70">Micro-quests to lock discipline.</p>
+        <div className="mono-card">
+          <div className="card-body">
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <p className="eyebrow">Daily missions</p>
+                <p className="muted">Micro-quests to lock discipline.</p>
+              </div>
+              <div className="badge ghost">Auto-tracked</div>
             </div>
-            <div className="pill ghost">Auto-tracked</div>
+            <DailyMissions />
           </div>
-          <DailyMissions />
         </div>
       </div>
     );
   };
 
   return (
-    <section className="space-y-5" aria-label="Dashboard" id={sectionId}>
+    <section className="section-shell" aria-label="Dashboard" id={sectionId}>
       <ActionIntake />
-      <div className="card-surface" id="insights">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className="label">Mission control</p>
-            <p className="text-xl font-bold">Minimal actions, maximal flow</p>
+      <div className="mono-card fade-in" id="insights">
+        <div className="card-body space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="eyebrow">Mission control</p>
+              <p className="title-xl">Minimal actions, maximal flow</p>
+              <p className="muted">Everything distilled to black & white cards.</p>
+            </div>
+            <div className="badge primary inline-flex items-center gap-2">
+              <TrendingUp size={16} />
+              Live XP sync
+            </div>
           </div>
-          <div className="pill primary inline-flex items-center gap-2">
-            <TrendingUp size={16} />
-            Live XP sync
+          <div className="segmented" role="tablist" aria-label="Action categories">
+            {tabs.map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                className={`segment ${activeTab === tab ? 'active' : ''}`}
+                onClick={() => setActiveTab(tab)}
+                aria-pressed={activeTab === tab}
+                role="tab"
+              >
+                {tab}
+              </button>
+            ))}
           </div>
+          <div className="mt-2">{renderTabContent()}</div>
         </div>
-        <div className="tab-rail" role="tablist" aria-label="Action categories">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              className={`tab ${activeTab === tab ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab)}
-              aria-pressed={activeTab === tab}
-              role="tab"
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-        <div className="mt-4">{renderTabContent()}</div>
       </div>
     </section>
   );
